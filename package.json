@@ -1,0 +1,33 @@
+{
+  "name": "gguser",
+  "version": "1.0.0",
+  "description": "A simple CLI utility tool to switch Git user accounts easily.",
+  "type": "module",
+  "main": "bin/gguser.js",
+  "bin": {
+    "gguser": "bin/gguser.js"
+  },
+  "scripts": {
+    "test": "node bin/gguser.js"
+  },
+  "author": "Shubhendra",
+  "dependencies": {
+    "inquirer": "^9.3.7"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/withshubh/gguser.git"
+  },
+  "keywords": [
+    "git",
+    "cli",
+    "profile",
+    "switch"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/withshubh/gguser/issues"
+  },
+  "homepage": "https://github.com/withshubh/gguser#readme"
+}
