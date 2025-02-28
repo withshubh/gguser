@@ -1,0 +1,15 @@
+{
+  "users": {
+    "personal": {
+      "name": "Shubhendra Singh Chauhan",
+      "email": "withshubh@gmail.com",
+      "sshKey": "/Users/shubhendra.chauhan/.ssh/id_ed25519_personal"
+    },
+    "work": {
+      "name": "Shubhendra Chauhan",
+      "email": "shubhendra.chauhan@cashfree.com",
+      "sshKey": "/Users/shubhendra.chauhan/.ssh/id_ed25519_cf"
+    }
+  },
+  "directories": {}
+}
