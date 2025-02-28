@@ -12,7 +12,17 @@ const __dirname = path.dirname(__filename);
 const CONFIG_PATH = path.join(__dirname, "..", "gguser.json");
 
 if (!fs.existsSync(CONFIG_PATH) || fs.readFileSync(CONFIG_PATH, "utf8").trim() === "") {
-  fs.writeFileSync(CONFIG_PATH, JSON.stringify({ users: {}, directories: {} }, null, 2));
+  fs.writeFileSync(
+    CONFIG_PATH,
+    JSON.stringify(
+      {
+        users: {},
+        directories: {},
+      },
+      null,
+      2
+    )
+  );
 }
 
 let config;
@@ -20,8 +30,21 @@ try {
   config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"));
 } catch (error) {
   console.error("❌ Error reading config file. Resetting...");
-  fs.writeFileSync(CONFIG_PATH, JSON.stringify({ users: {}, directories: {} }, null, 2));
-  config = { users: {}, directories: {} };
+  fs.writeFileSync(
+    CONFIG_PATH,
+    JSON.stringify(
+      {
+        users: {},
+        directories: {},
+      },
+      null,
+      2
+    )
+  );
+  config = {
+    users: {},
+    directories: {},
+  };
 }
 
 if (!config.directories) {
@@ -29,24 +52,24 @@ if (!config.directories) {
 }
 
 const args = process.argv.slice(2);
+const directory = process.cwd();
 
 if (args.length === 0) {
   console.log(`
 Usage:
-  gguser add <profile> <name> <email> [ssh_key]  Add a new Git profile with optional SSH key
+  gguser add <profile> <name> <email> [ssh_key]   Add a new Git profile with optional SSH key
   gguser <profile>                                Switch to a Git profile
   gguser list                                     List available profiles
   gguser select                                   Interactive profile selection
   gguser now                                      Show current Git user
   gguser remove <profile>                         Remove a Git profile
-  gguser link <profile> [directory]               Link a profile to the current directory
-  gguser unlink [directory]                       Remove an auto-switching rule
+  gguser link <profile>                           Link a profile to the current directory
+  gguser unlink                                   Remove an auto-switching rule
 `);
   process.exit(1);
 }
 
 const command = args[0];
-const directory = process.cwd();
 
 if (command === "add") {
   const [profile, name, email, sshKey] = args.slice(1);
@@ -55,7 +78,11 @@ if (command === "add") {
     process.exit(1);
   }
 
-  config.users[profile] = { name, email, sshKey };
+  config.users[profile] = {
+    name,
+    email,
+    sshKey,
+  };
   fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2));
   console.log(`✅ Added profile: ${profile}`);
 } else if (command === "list") {
@@ -68,8 +95,45 @@ if (command === "add") {
       console.log(`- ${profile}: ${config.users[profile].name} <${config.users[profile].email}>`);
     });
   }
+} else if (command === "link") {
+  const profile = args[1];
+
+  if (!profile || !config.users[profile]) {
+    console.log("❌ Profile not found. Use `gguser list` to see available profiles.");
+
+    process.exit(1);
+  }
+
+  config.directories[directory] = profile;
+
+  fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2));
+
+  console.log(`🔗 Linked profile '${profile}' to directory '${directory}'`);
+} else if (command === "unlink") {
+  if (!config.directories[directory]) {
+    console.log("❌ No profile linked to this directory.");
+
+    process.exit(1);
+  }
+
+  delete config.directories[directory];
+
+  fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2));
+
+  console.log(`🚫 Unlinked profile from directory '${directory}'`);
 } else if (command === "now") {
   let currentUser, currentEmail;
+  if (config.directories[directory]) {
+    const linkedProfile = config.directories[directory];
+
+    const user = config.users[linkedProfile];
+
+    console.log(`📂 Directory Linked Profile: ${linkedProfile}`);
+
+    console.log(`👤 Current Git User: ${user.name} <${user.email}>`);
+
+    process.exit(0);
+  }
   try {
     currentUser = execSync("git config --local user.name").toString().trim();
     currentEmail = execSync("git config --local user.email").toString().trim();
