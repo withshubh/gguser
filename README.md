@@ -12,7 +12,7 @@ npm install -g gguser
 
 Profiles and directory links are stored in `~/.gguser.json`, so they are kept across updates.
 
-**Upgrading from 1.2.0 or earlier:** older versions stored profiles inside the npm package directory, which npm deletes on update. Copy them to the new location **before** updating:
+**Upgrading from 1.2.0 or earlier:** older versions stored profiles inside the npm package directory, which npm deletes on update. When you update with `npm install -g gguser`, your profiles are moved to `~/.gguser.json` automatically. If you install with `--ignore-scripts`, pnpm, Yarn or bun, the move can't run, so copy them **before** updating:
 
 ```sh
 cp "$(npm root -g)/gguser/gguser.json" ~/.gguser.json
