@@ -7,6 +7,11 @@
   "bin": {
     "gguser": "bin/gguser.js"
   },
+  "files": [
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "test": "node bin/gguser.js"
   },
