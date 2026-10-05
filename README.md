@@ -16,7 +16,7 @@ npm install -g gguser
 
 | Command                                                       | Description                                       |
 | ------------------------------------------------------------- | ------------------------------------------------- |
-| `gguser add <profile_name> "<full_name>" "<email>" [ssh_key]` | Adds a new Git profile with an optional SSH key   |
+| `gguser add <profile_name> "<full_name>" "<email>" [ssh_key] [signing_key]` | Adds a new Git profile with an optional SSH key and GPG signing key |
 | `gguser select`                                               | Opens an interactive menu to switch profiles      |
 | `gguser <profile_name>`                                       | Switches directly to a specified Git profile      |
 | `gguser now`                                                  | Displays the currently configured Git user        |
@@ -28,15 +28,15 @@ npm install -g gguser
 ### 1️⃣ **Add a new Git profile**
 
 ```sh
-gguser add <profile_name> "<full_name>" "<email>" [ssh_key]
+gguser add <profile_name> "<full_name>" "<email>" [ssh_key] [signing_key]
 ```
 
-Note: ssh_key is optional
+Note: `ssh_key` and `signing_key` are optional. `signing_key` is the GPG key ID/fingerprint used to sign commits; it is set as `user.signingkey` when you switch to the profile (and cleared when you switch to a profile without one). To set a signing key without an SSH key, pass `""` for `ssh_key`.
 
 Example:
 
 ```sh
-gguser add work "Shubhendra Chauhan" "work@company" ~/.ssh/id_ed25520
+gguser add work "Shubhendra Chauhan" "work@company" ~/.ssh/id_ed25520 1234ABCDAB121080
 gguser add personal "Shubhendra Singh Chauhan" "personalemail@gmail.com" ~/.ssh/id_ed25520
 ```
 
