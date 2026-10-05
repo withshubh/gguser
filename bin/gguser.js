@@ -2,6 +2,7 @@
 
 import { execSync } from "child_process";
 import fs from "fs";
+import os from "os";
 import path from "path";
 import { fileURLToPath } from "url";
 import inquirer from "inquirer";
@@ -9,7 +10,19 @@ import inquirer from "inquirer";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const CONFIG_PATH = path.join(__dirname, "..", "gguser.json");
+// Stored in the home directory so it survives `npm update`, which replaces the package directory
+const CONFIG_PATH = path.join(os.homedir(), ".gguser.json");
+const LEGACY_CONFIG_PATH = path.join(__dirname, "..", "gguser.json");
+
+// Migrate the config from the package directory used by versions <= 1.2.0
+if (
+  !fs.existsSync(CONFIG_PATH) &&
+  fs.existsSync(LEGACY_CONFIG_PATH) &&
+  fs.readFileSync(LEGACY_CONFIG_PATH, "utf8").trim() !== ""
+) {
+  fs.copyFileSync(LEGACY_CONFIG_PATH, CONFIG_PATH);
+  console.log(`📦 Migrated profiles to ${CONFIG_PATH}`);
+}
 
 if (!fs.existsSync(CONFIG_PATH) || fs.readFileSync(CONFIG_PATH, "utf8").trim() === "") {
   fs.writeFileSync(
