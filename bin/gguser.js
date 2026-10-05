@@ -78,10 +78,17 @@ const switchProfile = (profile) => {
     execSync(`git config ${scope} user.signingkey "${user.signingKey}"`);
     console.log(`🔏 Signing key ${user.signingKey} set`);
   } else {
-    // Clear any signing key left over from a previous profile
+    // Clear a signing key left over from another profile, but keep one the user set manually
+    let currentKey;
     try {
-      execSync(`git config ${scope} --unset user.signingkey`, { stdio: "ignore" });
+      currentKey = execSync(`git config ${scope} --get user.signingkey`, { stdio: ["ignore", "pipe", "ignore"] })
+        .toString()
+        .trim();
     } catch {}
+    const profileKeys = Object.values(config.users).map((u) => u.signingKey);
+    if (currentKey && profileKeys.includes(currentKey)) {
+      execSync(`git config ${scope} --unset user.signingkey`);
+    }
   }
   if (user.sshKey) {
     if (fs.existsSync(user.sshKey)) {

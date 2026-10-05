@@ -31,7 +31,7 @@ npm install -g gguser
 gguser add <profile_name> "<full_name>" "<email>" [ssh_key] [signing_key]
 ```
 
-Note: `ssh_key` and `signing_key` are optional. `signing_key` is the GPG key ID/fingerprint used to sign commits; it is set as `user.signingkey` when you switch to the profile (and cleared when you switch to a profile without one). To set a signing key without an SSH key, pass `""` for `ssh_key`.
+Note: `ssh_key` and `signing_key` are optional. `signing_key` is the GPG key ID/fingerprint used to sign commits; it is set as `user.signingkey` when you switch to the profile (and cleared when you switch to a profile without one, unless it was set manually rather than by a gguser profile). To set a signing key without an SSH key, pass `""` for `ssh_key`.
 
 Example:
 
