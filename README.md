@@ -10,13 +10,22 @@ Install `gguser` globally using npm:
 npm install -g gguser
 ```
 
+Profiles and directory links are stored in `~/.gguser.json`, so they are kept across updates.
+
+**Upgrading from 1.2.0 or earlier:** older versions stored profiles inside the npm package directory, which npm deletes on update. When you update with `npm install -g gguser`, your profiles are moved to `~/.gguser.json` automatically. If you install with `--ignore-scripts`, pnpm, Yarn or bun, the move can't run, so copy them **before** updating:
+
+```sh
+cp "$(npm root -g)/gguser/gguser.json" ~/.gguser.json
+npm install -g gguser
+```
+
 ## 🎯 Usage
 
 ### Commands Overview
 
 | Command                                                       | Description                                       |
 | ------------------------------------------------------------- | ------------------------------------------------- |
-| `gguser add <profile_name> "<full_name>" "<email>" [ssh_key]` | Adds a new Git profile with an optional SSH key   |
+| `gguser add <profile_name> "<full_name>" "<email>" [ssh_key] [signing_key]` | Adds a new Git profile with an optional SSH key and GPG signing key |
 | `gguser select`                                               | Opens an interactive menu to switch profiles      |
 | `gguser <profile_name>`                                       | Switches directly to a specified Git profile      |
 | `gguser now`                                                  | Displays the currently configured Git user        |
@@ -28,15 +37,15 @@ npm install -g gguser
 ### 1️⃣ **Add a new Git profile**
 
 ```sh
-gguser add <profile_name> "<full_name>" "<email>" [ssh_key]
+gguser add <profile_name> "<full_name>" "<email>" [ssh_key] [signing_key]
 ```
 
-Note: ssh_key is optional
+Note: `ssh_key` and `signing_key` are optional. `signing_key` is the GPG key ID/fingerprint used to sign commits; it is set as `user.signingkey` when you switch to the profile (and cleared when you switch to a profile without one, unless it was set manually rather than by a gguser profile). To set a signing key without an SSH key, pass `""` for `ssh_key`.
 
 Example:
 
 ```sh
-gguser add work "Shubhendra Chauhan" "work@company" ~/.ssh/id_ed25520
+gguser add work "Shubhendra Chauhan" "work@company" ~/.ssh/id_ed25520 1234ABCDAB121080
 gguser add personal "Shubhendra Singh Chauhan" "personalemail@gmail.com" ~/.ssh/id_ed25520
 ```
 

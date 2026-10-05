@@ -185,3 +185,7 @@ dist
 
 # SvelteKit build / generate output
 .svelte-kit
+
+### gguser ###
+# Local profile config written by versions <= 1.2.0 when run from a checkout
+gguser.json
